@@ -3415,6 +3415,7 @@ function calculPrixTablier(L, H) {
 }
 
 function calculPrix() {
+  state.prixBase = 0; // Reset au début
   var _catEl = document.getElementById('prod-categorie');
   if (_catEl && _catEl.value === 'pieces') {
     // Afficher le sous-total pièces dans la page Prix
@@ -4839,8 +4840,10 @@ function captureLigne() {
 }
 
 function ajouterLigne() {
-  if (!state.prixBase || state.prixBase === 0) {
-    showToast('Calculez le prix avant d\'ajouter');
+  var _catAj = document.getElementById('prod-categorie');
+  var _catValAj = _catAj ? _catAj.value : '';
+  if (_catValAj !== 'pieces' && (!state.prixBase || state.prixBase === 0)) {
+    showToast('Prix = 0 - vérifiez dimensions et motorisation');
     return;
   }
   var ligne = captureLigne();
