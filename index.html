@@ -4527,25 +4527,32 @@ function appliquerATous() {
 var   LOGO_DATA = document.getElementById('logo-data') ? document.getElementById('logo-data').getAttribute('data-src') : '';
 
 function genererPDF() {
-  // Régénérer le numéro avec la remise client courante
+  // Régénérer le numéro
   state.devisNum = genNumero();
   var _dr = document.getElementById('devis-ref');
   if (_dr) _dr.textContent = 'Devis ' + state.devisNum;
+
   var contenu = _buildDevisContenu();
   var overlay = document.getElementById('devis-overlay');
   var zone    = document.getElementById('devis-contenu');
 
-  // Afficher l'apercu dans un iframe
-  zone.innerHTML = '';
-  var iframe = document.createElement('iframe');
-  iframe.style.cssText = 'width:100%;height:calc(100vh - 50px);border:none;';
-  zone.appendChild(iframe);
-  var iDoc = iframe.contentDocument || iframe.contentWindow.document;
-  iDoc.open();
-  iDoc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Devis</title></head><body>' + contenu + '</body></html>');
+  if (!overlay || !zone) { alert('Erreur: overlay introuvable'); return; }
 
-  iDoc.close();
-  setTimeout(function() { iframe.contentWindow.print(); }, 400);
+  // Afficher le contenu directement dans la zone (sans iframe)
+  zone.innerHTML = contenu;
+
+  // Afficher l'overlay
+  overlay.style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function imprimerDevis() {
+  window.print();
+}
+
+function fermerDevis() {
+  var overlay = document.getElementById('devis-overlay');
+  if (overlay) overlay.style.display = 'none';
 }
 
 function envoyerGoogleSheets(silencieux) {
